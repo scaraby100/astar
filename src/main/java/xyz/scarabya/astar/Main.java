@@ -15,6 +15,12 @@
  */
 package xyz.scarabya.astar;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import xyz.scarabya.astar.domain.Graph;
+import xyz.scarabya.astar.utils.TestDrawer;
+
 /**
  *
  * @author Alessandro Patriarca
@@ -24,10 +30,34 @@ public class Main
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
-        // TODO code application logic here
+        testDraw();
+    }
+    
+    public static void testDraw() throws IOException
+    {
+        TestDrawer test = new TestDrawer();
+        
+        test.readFile(new File("C:\\Users\\a.patriarca\\Desktop\\input_challenge\\test.txt"));
+        
+        test.createTriangles(10);
+        
+        Graph matrix = test.matrix;
+        
+        try(PrintWriter pw = new PrintWriter(new File("C:\\Users\\a.patriarca\\Desktop\\output_challenge\\output_visual.txt")))
+        {
+            for(int y = matrix.minY; y <= matrix.maxY; y++)
+            {
+                for(int x = matrix.minX; x <= matrix.maxX; x++)
+                {
+                    pw.print(matrix.get(x, y) ? 'X' : ' ');
+                }
+                pw.println();
+            }
+        }
     }
     
 }

@@ -21,5 +21,35 @@ package xyz.scarabya.astar.domain;
  */
 public class Point
 {
+    public final int x, y;    
+    private final int hash;
     
+    public int gScore, fScore;    
+    public Point cameFrom;
+
+    public Point(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+        hash = 5887 + (29 * x) + y;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (getClass() == obj.getClass())
+        {
+            final Point other = (Point) obj;
+            return x == other.x && y == other.y;
+        }
+        return false;
+    }
 }
