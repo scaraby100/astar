@@ -77,7 +77,7 @@ public class Problem
         obstacleCoord = null;
 
     }
-    
+    /*
     private void line8C(final int x0, final int y0, final int x1, final int y1)
     {
         final int dx = Math.abs(x1 - x0);
@@ -112,7 +112,7 @@ public class Problem
         }
         obstaclesPoint.add(new Point(x1, y1));
     }
-
+*/
     private void line4C(final int x0, final int y0, final int x1, final int y1)
     {
         final int dx = Math.abs(x1 - x0);

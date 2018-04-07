@@ -21,11 +21,14 @@ package xyz.scarabya.astar.domain;
  */
 public class Point
 {
-    public final int x, y;    
+    public final int x, y;
     private final int hash;
-    
-    public int gScore, fScore;    
+
     public Point cameFrom;
+    public double fScore;
+    public int gScore = 2147483647;
+    
+    public boolean toInsert = true;
 
     public Point(int x, int y)
     {
@@ -43,13 +46,7 @@ public class Point
     @Override
     public boolean equals(Object obj)
     {
-        if (this == obj)
-            return true;
-        if (getClass() == obj.getClass())
-        {
-            final Point other = (Point) obj;
-            return x == other.x && y == other.y;
-        }
-        return false;
+        final Point other = (Point) obj;
+        return x == other.x && y == other.y;
     }
 }

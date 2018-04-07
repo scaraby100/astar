@@ -15,11 +15,20 @@
  */
 package xyz.scarabya.astar.domain;
 
+import java.util.PriorityQueue;
+
 /**
  *
  * @author Alessandro Patriarca
  */
-public class HeapAlternative
+public class HeapAlternative extends PriorityQueue
 {
-    
+    //private final PriorityQueue<Point> openSet;
+
+    public HeapAlternative()
+    {
+        //this.openSet = new PriorityQueue<> ((Point one, Point two)
+          //      -> two.fScore - one.fScore);
+    }
+
 }
