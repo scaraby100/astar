@@ -41,9 +41,11 @@ public class Main
     {
         Problem prob = new Problem();
         
+        File input = new File("C:\\Users\\a.patriarca\\Desktop\\input_challenge\\input_2.txt");
+        
         System.out.println("Lettura problema");
         
-        prob.readFile(new File("C:\\Users\\a.patriarca\\Desktop\\input_challenge\\input_3.txt"));
+        prob.readFile(input);
         
         System.out.println("Creazione triangoli");
         
@@ -63,22 +65,29 @@ public class Main
         
         System.out.println("Stampa path");
         
-        try(PrintWriter pw = new PrintWriter(new File("C:\\Users\\a.patriarca\\Desktop\\output_challenge\\output.txt")))
+        try(PrintWriter pw = new PrintWriter(new File("C:\\Users\\a.patriarca\\Desktop\\output_challenge\\output_2.txt")))
         {
-            for(Point point : path)
+            if(!path.isEmpty())
             {
-                pw.println(point.x + ";" + point.y);
+                pw.println(path.size());
+                for(Point point : path)
+                {
+                    pw.println(point.x + " " + point.y);
+                }
             }
-            pw.println();
+            else
+                pw.println("IMPOSSIBLE");
         }
-        testDraw(path);
+        
+        System.out.println("Stampa path grafico");
+            testDraw(input, path);
     }
     
-    public static void testDraw(LinkedList<Point> path) throws IOException
+    public static void testDraw(File input, LinkedList<Point> path) throws IOException
     {
         TestDrawer test = new TestDrawer();
         
-        test.readFile(new File("C:\\Users\\a.patriarca\\Desktop\\input_challenge\\input_3.txt"));
+        test.readFile(input);
         
         test.createTriangles(10);
         

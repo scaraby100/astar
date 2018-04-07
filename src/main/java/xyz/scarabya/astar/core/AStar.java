@@ -44,7 +44,7 @@ public class AStar
         this.end = end;
         
         this.openQueue = new PriorityQueue<>((Point one, Point two)
-                -> (int)(one.fScore - two.fScore));
+                -> one.fScore > two.fScore ? 1 : -1);
         this.closedSet = new LinkedHashSet<>();
         this.openMap = new HashMap<>();
     }
@@ -89,7 +89,8 @@ public class AStar
                 }
             }
         }
-        end.cameFrom = current.cameFrom;
+        if(current != null && end.equals(current))
+            end.cameFrom = current.cameFrom;
     }
 
     private LinkedList<Point> findNeighbors(Point point)
@@ -112,7 +113,25 @@ public class AStar
 
         neighbor = new Point(px - 1, py);
         if (!closedSet.contains(neighbor) && !obstacles.contains(neighbor))
-            neighbors.add(getFromMapOrAddNew(neighbor));        
+            neighbors.add(getFromMapOrAddNew(neighbor));
+
+        
+        
+        neighbor = new Point(px + 1, py + 1);
+        if (!closedSet.contains(neighbor) && !obstacles.contains(neighbor))
+            neighbors.add(getFromMapOrAddNew(neighbor));
+        
+        neighbor = new Point(px - 1, py + 1);
+        if (!closedSet.contains(neighbor) && !obstacles.contains(neighbor))
+            neighbors.add(getFromMapOrAddNew(neighbor));
+        
+        neighbor = new Point(px + 1, py - 1);
+        if (!closedSet.contains(neighbor) && !obstacles.contains(neighbor))
+            neighbors.add(getFromMapOrAddNew(neighbor));
+        
+        neighbor = new Point(px -1, py - 1);
+        if (!closedSet.contains(neighbor) && !obstacles.contains(neighbor))
+            neighbors.add(getFromMapOrAddNew(neighbor));
 
         return neighbors;
     }
@@ -120,11 +139,14 @@ public class AStar
     public LinkedList<Point> getFinalPath()
     {
         LinkedList<Point> finalPath = new LinkedList<>();
-        Point current = end;
-        while(current.cameFrom != null)
+        if(end.cameFrom != null)
         {
-            finalPath.addFirst(current);
-            current = current.cameFrom;
+            Point current = end;
+            while(current != null)
+            {
+                finalPath.addFirst(current);
+                current = current.cameFrom;
+            }
         }
         return finalPath;
     }
@@ -146,8 +168,8 @@ public class AStar
         return Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
     }
 
-    public double getHeuristicCostEstimate(Point from)
+    public int getHeuristicCostEstimate(Point from)
     {
-        return Math.sqrt(Math.pow(from.x - end.x, 2)+Math.pow(from.y - end.y,2));
+        return Math.abs(from.x - end.x) + Math.abs(from.y - end.y);
     }
 }
