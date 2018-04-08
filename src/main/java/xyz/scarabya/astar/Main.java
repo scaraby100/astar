@@ -39,9 +39,21 @@ public class Main
      */
     public static void main(String[] args) throws IOException
     {
-        Problem prob = new Problem();
+        File input1 = new File("C:\\Users\\a.patriarca\\Desktop\\input_challenge\\input_3.txt");
+        File output1 = new File("C:\\Users\\a.patriarca\\Desktop\\output_challenge\\output_3.txt");
         
-        File input = new File("C:\\Users\\a.patriarca\\Desktop\\input_challenge\\input_2.txt");
+        File input2 = new File("C:\\Users\\a.patriarca\\Desktop\\input_challenge\\input_4.txt");
+        File output2 = new File("C:\\Users\\a.patriarca\\Desktop\\output_challenge\\output_4.txt");
+        
+        runFile(input1, output1);
+        runFile(input2, output2);
+        
+        //testDraw(input, path);
+    }
+    
+    public static void runFile(File input, File output) throws IOException
+    {
+        Problem prob = new Problem();
         
         System.out.println("Lettura problema");
         
@@ -65,7 +77,7 @@ public class Main
         
         System.out.println("Stampa path");
         
-        try(PrintWriter pw = new PrintWriter(new File("C:\\Users\\a.patriarca\\Desktop\\output_challenge\\output_2.txt")))
+        try(PrintWriter pw = new PrintWriter(output))
         {
             if(!path.isEmpty())
             {
@@ -78,13 +90,12 @@ public class Main
             else
                 pw.println("IMPOSSIBLE");
         }
-        
-        System.out.println("Stampa path grafico");
-            testDraw(input, path);
     }
     
     public static void testDraw(File input, LinkedList<Point> path) throws IOException
     {
+        System.out.println("Stampa path grafico");
+        
         TestDrawer test = new TestDrawer();
         
         test.readFile(input);

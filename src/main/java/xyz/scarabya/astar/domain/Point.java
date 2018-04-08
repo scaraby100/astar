@@ -25,8 +25,8 @@ public class Point
     private final int hash;
 
     public Point cameFrom;
-    public int fScore;
-    public int gScore = 2147483647;
+    public double fScore;
+    public double gScore = 2147483647;
     
     public boolean toInsert = true;
 

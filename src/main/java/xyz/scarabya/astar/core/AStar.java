@@ -35,16 +35,18 @@ public class AStar
     
     private final Point start, end;
     
-    private boolean pathFound = false;
+    private final double diagonalDist = StrictMath.sqrt(2);
+    private final int endX, endY;
 
     public AStar(Point start, Point end, HashSet<Point> obstacles)
     {
         this.obstacles = obstacles;
         this.start = start;
         this.end = end;
-        
+        this.endX = end.x;
+        this.endY = end.y;
         this.openQueue = new PriorityQueue<>((Point one, Point two)
-                -> one.fScore > two.fScore ? 1 : -1);
+                -> one.fScore >= two.fScore ? 1 : -1);
         this.closedSet = new LinkedHashSet<>();
         this.openMap = new HashMap<>();
     }
@@ -52,15 +54,14 @@ public class AStar
 
     public void findPath()
     {
-        pathFound = false;
         start.fScore = getHeuristicCostEstimate(start);
         start.gScore = 0;
         start.toInsert = false;
-        openQueue.add(start);
+        openQueue.offer(start);
         openMap.put(start, start);
 
         Point current = null;
-        int tentativeGScore;
+        double tentativeGScore;
 
         while (!openQueue.isEmpty() && !(current = openQueue.poll()).equals(end))
         {
@@ -69,7 +70,7 @@ public class AStar
 
             for (Point neighbor : findNeighbors(current))
             {
-                tentativeGScore = current.gScore + 1;
+                tentativeGScore = current.gScore + getDistBetween(current, neighbor);
                 if (tentativeGScore < neighbor.gScore)
                 {
                     if (!neighbor.toInsert)
@@ -85,7 +86,7 @@ public class AStar
                 if (neighbor.toInsert)
                 {
                     neighbor.toInsert = false;
-                    openQueue.add(neighbor);
+                    openQueue.offer(neighbor);
                 }
             }
         }
@@ -151,7 +152,7 @@ public class AStar
         return finalPath;
     }
     
-    private Point getFromMapOrAddNew(Point point)
+    private Point getFromMapOrAddNew(final Point point)
     {
         final Point retPoint = openMap.get(point);
         if(retPoint == null)
@@ -163,13 +164,15 @@ public class AStar
             return retPoint;
     }
 
-    public int getDistBetween(Point from, Point to)
+    private double getDistBetween(final Point from, final Point to)
     {
-        return Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
+        return (from.x != to.x && from.y != to.y) ? 1.3 : 1;
     }
 
-    public int getHeuristicCostEstimate(Point from)
+    private double getHeuristicCostEstimate(final Point from)
     {
-        return Math.abs(from.x - end.x) + Math.abs(from.y - end.y);
+        final int dX = (from.x - endX), dY = (from.y - endY);
+        return StrictMath.sqrt(dX * dX + dY * dY);
+        //return (dX > 0 ? dX : -dX) + (dY > 0 ? dY : -dY);
     }
 }
