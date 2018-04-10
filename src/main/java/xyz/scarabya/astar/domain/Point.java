@@ -26,7 +26,8 @@ public class Point
 
     public Point cameFrom;
     public double fScore;
-    public double gScore = 2147483647;
+    public double hScore;
+    public int gScore = 2147483647;
     
     public boolean toInsert = true;
 
