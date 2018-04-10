@@ -15,11 +15,15 @@
  */
 package xyz.scarabya.astar.core;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import xyz.scarabya.astar.domain.Point;
 
 /**
@@ -30,7 +34,7 @@ public class AStar
 {
     private final PriorityQueue<Point> openQueue;
     private final HashMap<Point, Point> openMap;
-    private final LinkedHashSet<Point> closedSet;
+    private final HashSet<Point> closedSet;
     private final HashSet<Point> obstacles;
     
     private final Point start, end;
@@ -47,7 +51,7 @@ public class AStar
         this.endY = end.y;
         this.openQueue = new PriorityQueue<>((Point one, Point two)
                 -> one.fScore >= two.fScore ? 1 : -1);
-        this.closedSet = new LinkedHashSet<>();
+        this.closedSet = new HashSet<>();
         this.openMap = new HashMap<>();
     }
     
@@ -62,34 +66,45 @@ public class AStar
 
         Point current = null;
         double tentativeGScore;
-
-        while (!openQueue.isEmpty() && !(current = openQueue.poll()).equals(end))
+        
+        try(PrintWriter pw = new PrintWriter(new File ("C:\\Users\\a.patriarca\\Desktop\\output_challenge\\stats_4_euclidean_1.3.txt")))
         {
-            openMap.remove(current);
-            closedSet.add(current);
-
-            for (Point neighbor : findNeighbors(current))
+            System.out.println(obstacles.size());
+            while (!openQueue.isEmpty() && !(current = openQueue.poll()).equals(end))
             {
-                tentativeGScore = current.gScore + getDistBetween(current, neighbor);
-                if (tentativeGScore < neighbor.gScore)
-                {
-                    if (!neighbor.toInsert)
-                    {
-                        neighbor.toInsert = true;
-                        openQueue.remove(neighbor);
-                    }
-                    neighbor.cameFrom = current;
-                    neighbor.gScore = tentativeGScore;
-                    neighbor.fScore = tentativeGScore + getHeuristicCostEstimate(neighbor);
-                }
+                pw.println(openQueue.size() + ";" + closedSet.size());
+                openMap.remove(current);
+                closedSet.add(current);
 
-                if (neighbor.toInsert)
+                for (Point neighbor : findNeighbors(current))
                 {
-                    neighbor.toInsert = false;
-                    openQueue.offer(neighbor);
+                    tentativeGScore = current.gScore + getDistBetween(current, neighbor);
+                    if (tentativeGScore < neighbor.gScore)
+                    {
+                        if (!neighbor.toInsert)
+                        {
+                            neighbor.toInsert = true;
+                            openQueue.remove(neighbor);
+                        }
+                        neighbor.cameFrom = current;
+                        neighbor.gScore = tentativeGScore;
+                        neighbor.fScore = tentativeGScore + getHeuristicCostEstimate(neighbor);
+                    }
+
+                    if (neighbor.toInsert)
+                    {
+                        neighbor.toInsert = false;
+                        openQueue.offer(neighbor);
+                    }
                 }
             }
         }
+        catch (FileNotFoundException ex)
+        {
+            Logger.getLogger(AStar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
         if(current != null && end.equals(current))
             end.cameFrom = current.cameFrom;
     }
